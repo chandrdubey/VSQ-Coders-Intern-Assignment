@@ -1,4 +1,5 @@
 # Book a trial class
+A web page for booking a trial class.
 This is an assignment I made for VSQ CODERS. Internship.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
