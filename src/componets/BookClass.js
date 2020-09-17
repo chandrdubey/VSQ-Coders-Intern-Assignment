@@ -7,11 +7,24 @@ class BookClass extends Component {
       apiData: [],
       courseData: {},
       courseStatus: false,
-      courseMenu:"Select"
+      courseMenu: "Select",
+      x: 1,
+      timeSlot: [],
+      slotDate: "1999-02-23",
+      slotTime: "Select",
+      isLoading:true
     };
   }
 
   componentDidMount() {
+    let todayDate = new Date();
+    let latestSlotDate = new Date();
+    latestSlotDate.setHours(todayDate.getHours() + 4);
+    const latestSlotDay = getDate(latestSlotDate);
+    // console.log(`hell ${latestSlotDay}`)
+    this.setState({
+      slotDate: latestSlotDay,
+    });
     axios
       .get(
         "https://script.google.com/macros/s/AKfycbzJ8Nn2ytbGO8QOkGU1kfU9q50RjDHje4Ysphyesyh-osS76wep/exec"
@@ -22,6 +35,8 @@ class BookClass extends Component {
 
         this.setState({
           apiData: response.data,
+          courseData: this.state.apiData[0],
+          isLoading:false
         });
       })
       .catch(function (error) {
@@ -29,18 +44,32 @@ class BookClass extends Component {
         console.log(error);
       });
   }
-  handleSelectCourse = (course) => {
-   
-    console.log("hello")
-      this.setState({
-        courseData: course,
-        courseStatus: true,
-        courseMenu: course.course_name
-      });
+  handleSelectChange = (event) => {
+    this.setState({
+      // courseData:this.state.apiData[event.target.value-1],
+      x: event.target.value,
+      courseData: this.state.apiData[event.target.value - 1],
+    });
+    console.log(event.target.value);
+    console.log(this.state.x);
+
+   // console.log(this.state.courseData);
+
+    //   this.setState({
+    //     courseData: course,
+    //     courseStatus: true,
+    //     courseMenu: course.course_name
+    //   });
   };
-  handleMenu = (event) =>{
+  handleChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({
+      [name]: value,
+    });
+  };
+  handleMenu = (event) => {
     event.preventDefault();
-  }
+  };
   handleSelectDefault = () => {
     this.setState({
       courseData: {},
@@ -48,7 +77,34 @@ class BookClass extends Component {
     });
   };
   render() {
-    return (
+    console.log(Date.now());
+    let todayDate = new Date();
+
+    const today = getDate(todayDate);
+    //  console.log(today)
+    let lastDate = new Date();
+    lastDate.setDate(todayDate.getDate() + 7);
+    //  console.log(lastDate);
+    const lastDay = getDate(lastDate);
+    console.log(this.state.courseData);
+    let timeSlots;
+    //   console.log(lastDay);
+    if (this.state.courseData && this.state.courseData.slots) {
+      let timeArr = getSlotInHours(this.state.courseData.slots);
+      
+      console.log(`${today} = ${this.state.slotDate}`)
+      if(today === this.state.slotDate)
+      {
+        const hour = todayDate.getHours()+4;
+        timeArr.map(time => console.log( parseInt(time.substr(0,2))))
+       
+        timeSlots = timeArr.filter(time => parseInt(time.substr(0,2)) >= hour )
+        console.log(`${timeSlots} hard`);
+      }
+     
+    }
+
+    return this.state.isLoading ?(<div> Loadding</div>) : (
       <div>
         <h2 className="text-center">Book your trial class today </h2>
         <form className="mx-auto">
@@ -104,55 +160,46 @@ class BookClass extends Component {
               placeholder="Age of Child"
             />
           </div>
-          <div className="dropdown">
-            <button
-              className="btn dropdown-toggle btn-dropdown"
-              type="button"
-              id="dropdownMenuButton"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-              onClick={this.handleMenu}
-            >
-              {this.state.courseMenu}
-            </button>
-           
-            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            {this.state.apiData.length > 0 &&
-              this.state.apiData.map((course) => (
-                <button
-                className="dropdown-item"
-                key={course.course_id}
-                onClick={() => this.handleSelectCourse(course)}
-              >
-               {course.course_name}
-              </button>
-
-              ))}
-            </div>
-          </div>
-          {/* <div className="form-group  course-select">
+          <div className="form-group  course-select">
             <label htmlFor="inputState">Select Course</label>
             <select
               id="inputState"
               className="form-control"
-              value="0"
-              onChange={() => this.handleSelectCourse()}
+              value={this.state.x}
+              onChange={this.handleSelectChange}
             >
-              <option value="0">Select</option>
-              {this.state.apiData.length > 0 &&
-                this.state.apiData.map((course) => (
-                  <option key={course.course_id} value={course.course_id + 1}>
-                    {course.course_name}
-                  </option>
-                ))}
+              <option value="1">Scratch Junior</option>
+              <option value="2">Game Development</option>
+              <option value="3">App Development</option>
+              <option value="4">Web Development</option>
             </select>
-          </div> */}
-          {this.courseStatus && (
-            <>
-              <input type="date" min="2013-10-01" max="2013-10-20" />
-            </>
-          )}
+          </div>
+          <div className="form-group ">
+            <input
+              type="date"
+              name="slotDate"
+              value={this.state.slotDate}
+              min={today}
+              max={lastDay}
+              onChange={this.handleChange}
+            />
+          </div>
+          <div className="form-group  course-select">
+            <label htmlFor="inputState">Select Course</label>
+            <select
+              id="inputState"
+              className="form-control"
+              value={this.state.slotTime}
+              onChange={this.handleSelectChange}
+            >
+             
+             { timeSlots ? timeSlots.map((slot,index) =>( <option value={slot} key={index} >{slot}</option>)
+             
+             ) :  <option value="select">No class available</option>}
+              
+            
+            </select>
+          </div>
           <button type="submit" className="btn btn-primary">
             Submit
           </button>
@@ -161,5 +208,40 @@ class BookClass extends Component {
     );
   }
 }
+const getDate = (todayDate) => {
+  let dd = todayDate.getDate();
+  let mm = todayDate.getMonth() + 1; //January is 0!
+  let yyyy = todayDate.getFullYear();
+  console.log(todayDate.toString());
+  // let yyyy = today.getFullYear();
+  if (dd < 10) {
+    dd = "0" + dd;
+  }
+  if (mm < 10) {
+    mm = "0" + mm;
+  }
+  let today = yyyy + "-" + mm + "-" + dd;
+  return today;
+};
 
+const getSlotInHours = (slots) => {
+  let timeSlot = [];
+  slots.forEach((slotInfo) => {
+    let eachSlot = parseInt(slotInfo.slot);
+    let date = new Date(eachSlot);
+    // let endTime
+    let hours = date.getHours();
+    // Minutes part from the timestamp
+    let minutes = "0" + date.getMinutes();
+    // Seconds part from the timestamp
+
+    // Will display time in 10:30:23 format
+    let formattedTime = hours + ":" + minutes.substr(-2);
+  //  console.log(formattedTime);
+    
+    //console.log(date);
+     timeSlot.push(formattedTime);
+  });
+  return timeSlot;
+};
 export default BookClass;
