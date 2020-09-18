@@ -1,11 +1,11 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "2f96ae2e48fc37e28bb6945d080ca7d5",
+    "revision": "74c0a659da5b3f1e6babdc897be2a377",
     "url": "/VSQ-Coders-Intern-Assignment/index.html"
   },
   {
-    "revision": "29e9bab511a45715555f",
-    "url": "/VSQ-Coders-Intern-Assignment/static/css/main.bf438a6d.chunk.css"
+    "revision": "06e16d3bfd3ab5e57c2f",
+    "url": "/VSQ-Coders-Intern-Assignment/static/css/main.1985c281.chunk.css"
   },
   {
     "revision": "822df284b54b6463996e",
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/VSQ-Coders-Intern-Assignment/static/js/2.bb282844.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "29e9bab511a45715555f",
-    "url": "/VSQ-Coders-Intern-Assignment/static/js/main.35e1c1d3.chunk.js"
+    "revision": "06e16d3bfd3ab5e57c2f",
+    "url": "/VSQ-Coders-Intern-Assignment/static/js/main.73299a4b.chunk.js"
   },
   {
     "revision": "1b5e634517d178678a6f",
