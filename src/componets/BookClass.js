@@ -54,6 +54,7 @@ class BookClass extends Component {
       // courseData:this.state.apiData[event.target.value-1],
       x: event.target.value,
       courseData: this.state.apiData[event.target.value],
+      slotTime:"Select"
     });
     if(this.state.x !== -1)
     {
@@ -74,15 +75,16 @@ class BookClass extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     alert(
-      `${this.state.parentName} , ${this.state.parentContactNo}, ${this.state.email} ,
-      ${this.state.ageOfChild}  ,${this.state.nameOfChild}, ${this.state.courseSelect},
-      ${this.state.slotDate} , ${this.state.slotTime}`
+      `Parent Name : ${this.state.parentName}, Parent Cobtact No: ${this.state.parentContactNo}, Email : ${this.state.email}, Age of Child: ${this.state.ageOfChild}, Name of Child${this.state.nameOfChild}, Course Name : ${this.state.courseSelect},Class Date:  ${this.state.slotDate}, Time: ${this.state.slotTime}`
+     
+     
     );
   };
 
   render() {
     console.log(Date.now());
     let todayDate = new Date();
+    console.log(todayDate.toString());
     let timeSlots = [];
     const today = getDate(todayDate);
     //Getting last day of booking
@@ -91,8 +93,8 @@ class BookClass extends Component {
 
     //converting in the format which we can use in html input type of date
     const lastDay = getDate(lastDate);
-    console.log(this.state.courseData);
-
+   // console.log(this.state.courseData);
+   console.log(lastDate.toString());
     //Checking if we got data from API
     if (this.state.courseData && this.state.courseData.slots) {
       //Getting time in hours and minutes
@@ -108,12 +110,14 @@ class BookClass extends Component {
       }
       //if booking day is last then only slot will show which are before the present time
       else if (lastDay === this.state.slotDate) {
+        console.log(`${lastDay} =${this.state.slotDate}`);
         const hour = lastDate.getHours();
         timeArr.map((time) =>
+         
           console.log(parseInt(time.slotStart.substr(0, 2)))
         );
         timeSlots = timeArr.filter(
-          (time) => parseInt(time.substr(0, 2)) <= hour
+          (time) => parseInt(time.slotStart.substr(0, 2)) <= hour
         );
       }
       //all slot will show
@@ -123,11 +127,16 @@ class BookClass extends Component {
     }
 
     return this.state.isLoading ? (
-      <div> Loadding</div>
+      <>
+    <div className="spinner">
+  <div className="halfSpin"></div>
+   </div>
+      </>
     ) : (
-      <div>
+      <div className="shadow p-3 mb-5 bg-white rounded" >
+      
+        <form className=" mx-auto main-page p-2 my-3" onSubmit={this.handleSubmit}>
         <h2 className="text-center">Book a trial class </h2>
-        <form className="mx-auto" onSubmit={this.handleSubmit}>
           <div className="form-group ">
             <label htmlFor="exampleInputEmail1">Parent Name</label>
             <input
@@ -139,6 +148,7 @@ class BookClass extends Component {
               name="parentName"
               value={this.state.parentName}
               onChange={this.handleChange}
+              required
             />
           </div>
           <div className="form-group ">
@@ -152,6 +162,7 @@ class BookClass extends Component {
               name="parentContactNo"
               value={this.state.parentContactNo}
               onChange={this.handleChange}
+              required
             />
           </div>
 
@@ -166,6 +177,7 @@ class BookClass extends Component {
               name="email"
               value={this.state.email}
               onChange={this.handleChange}
+              required
             />
           </div>
           <div className="form-group ">
@@ -179,6 +191,7 @@ class BookClass extends Component {
               name="nameOfChild"
               value={this.state.nameOfChild}
               onChange={this.handleChange}
+              required
             />
           </div>
 
@@ -193,6 +206,7 @@ class BookClass extends Component {
               name="ageOfChild"
               value={this.state.ageOfChild}
               onChange={this.handleChange}
+              required
             />
           </div>
           <div className="form-group  course-select">
@@ -202,6 +216,7 @@ class BookClass extends Component {
               className="form-control"
               value={this.state.x}
               onChange={this.handleSelectChange}
+              required
             >
               <option value="-1">Select</option>
               {this.state.apiData.length > 0 &&
@@ -223,6 +238,7 @@ class BookClass extends Component {
               min={today}
               max={lastDay}
               onChange={this.handleChange}
+              required
             />
           </div>
           <div className="form-group  course-select">
@@ -233,6 +249,7 @@ class BookClass extends Component {
               name="slotTime"
               value={this.state.slotTime}
               onChange={this.handleChange}
+            
             >
               {timeSlots.length > 0 ? (
                 timeSlots.map((slot, index) => (
@@ -248,11 +265,16 @@ class BookClass extends Component {
               )}
             </select>
           </div>
-          <button type="submit" className="btn btn-primary">
-            Submit
-          </button>
+          <div className="text-center">
+              <button type="submit" className="btn btn-primary submit-btn ">
+              Submit
+               </button>
+           </div>
+          
         </form>
       </div>
+        
+  
     );
   }
 }

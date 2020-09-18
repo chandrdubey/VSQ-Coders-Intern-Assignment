@@ -5,5 +5,48 @@ form{
   width: 50vw;
 }
 .course-select{
-  width: 250px;
+  width: 225px;
+}
+
+/* Spinner  */
+.spinner {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.halfSpin {
+  position: relative;
+  display: inline-block;
+  width: 150px;
+  height: 75px;
+  border-top-left-radius: 95px;
+  border-top-right-radius: 95px;
+  border: 5px solid #1058aa;
+  border-bottom: 0;
+  transform-origin: bottom center;
+  animation: 1s infinite turner;
+}
+
+@keyframes turner {
+  from {
+    transform: rotate(0turn);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+}
+.submit-btn {
+  
+  width: 20vw;
+  
+  border-radius: 50px;
+}
+.main-page{
+  background-color: rgb(220, 230, 243) !important;
+}
+@media (max-width: 690px) {
+  form{
+    width: 80vw;
+  }
+
 }
